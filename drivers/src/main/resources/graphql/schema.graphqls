@@ -1,0 +1,34 @@
+type Mutation {
+    registerDriver(input: DriverInput!): Driver
+    updateDriverLocation(input: DriverLocationInput!): Driver
+}
+
+type Query {
+    findAvailableInArea(location: LocationInput!): [Driver]
+}
+
+type Driver {
+    driverId: ID
+    location: Location
+    available: Boolean
+}
+
+type Location {
+    lat: Float!
+    lng: Float!
+}
+
+input DriverInput {
+    name: String!
+    location: LocationInput
+}
+
+input DriverLocationInput {
+    driverId: ID!
+    location: LocationInput
+}
+
+input LocationInput {
+    lat: Float!
+    lng: Float!
+}

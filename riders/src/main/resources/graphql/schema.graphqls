@@ -1,0 +1,30 @@
+type Mutation {
+    requestRide(input: RideRequestInput!): RideResponse
+}
+
+type Query {
+    getRideById(rideId: ID!): RideResponse
+}
+
+input RideRequestInput {
+    riderId: ID!
+    pickup: LocationInput!
+    dropoff: LocationInput!
+}
+
+input LocationInput {
+    lat: Float!
+    lng: Float!
+}
+
+type RideResponse {
+    rideId: ID!
+    status: String!
+    location: Location
+    driverId: String
+}
+
+type Location {
+    lat: Float!
+    lng: Float!
+}
