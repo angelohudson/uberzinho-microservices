@@ -1,5 +1,6 @@
 package com.uberzinho.riders.client
 
+import com.uberzinho.riders.domain.RideStatus
 import com.uberzinho.riders.domain.RideUpdatedEvent
 import org.springframework.graphql.client.HttpGraphQlClient
 import org.springframework.stereotype.Component
@@ -25,6 +26,15 @@ class AppSyncClient(
         """
     }
 
+    fun updateStatus(rideId: String, status: RideStatus): RideResponse? {
+        return this.updateStatus(
+            RideUpdatedEvent(
+                rideId = rideId,
+                status = status
+            )
+        )
+    }
+
     fun updateStatus(input: RideUpdatedEvent): RideResponse? {
         return httpGraphQlClient.document(Key.UPDATE_RIDE_MUTATION.trimIndent())
             .variable("input", input)
@@ -45,7 +55,7 @@ data class LocationInput(val lat: Double, val lng: Double)
 
 data class RideResponse(
     val rideId: String,
-    val driverId: String,
-    val status: String,
-    val location: LocationInput
+    val driverId: String? = null,
+    val status: String? = null,
+    val location: LocationInput? = null
 )

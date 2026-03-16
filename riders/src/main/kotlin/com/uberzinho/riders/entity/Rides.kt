@@ -6,8 +6,9 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 @DynamoDbBean
 data class Rides(
     @get:DynamoDbPartitionKey
-    var rideId: String = "",
-    var driverId: String = "",
+    var rideId: String? = null,
+    var riderId: String? = null,
+    var driverId: String? = null,
     var status: RideStatus? = null,
     var location: Location? = null,
 )

@@ -1,5 +1,8 @@
 package com.uberzinho.drivers.service
 
+import com.uberzinho.drivers.client.AppSyncClient
+import com.uberzinho.drivers.client.LocationInput
+import com.uberzinho.drivers.client.RideAssignedEvent
 import com.uberzinho.drivers.domain.*
 import com.uberzinho.drivers.entity.DriverLocation
 import com.uberzinho.drivers.entity.Drivers
@@ -13,7 +16,8 @@ import java.util.UUID
 @Service
 class DriverService(
     private val driverEventProducer: DriverEventProducer,
-    private val driverRepository: DriverRepository
+    private val driverRepository: DriverRepository,
+    private val appSyncClient: AppSyncClient
 ) {
 
     fun findClosestDriver(
@@ -40,6 +44,21 @@ class DriverService(
         // publishing ride update event to notify the rider about the assigned driver
         this.publishRideUpdate(closest)
 
+        this.appSyncClient.assignRide(
+            RideAssignedEvent(
+                rideId = event.rideId,
+                driverId = closest.driverId,
+                pickup = LocationInput(
+                    lat = event.pickup.lat,
+                    lng = event.pickup.lng
+                ),
+                dropoff = LocationInput(
+                    lat = event.dropoff.lat,
+                    lng = event.dropoff.lng
+                )
+            )
+        )
+
         // marking the driver as unavailable and saving the assigned rideId
         driverRepository.save(closest)
     }
@@ -64,7 +83,8 @@ class DriverService(
 
         driverRepository.save(existingDriver)
 
-        this.publishRideUpdate(existingDriver)
+        if (existingDriver.rideId != null)
+            this.publishRideUpdate(existingDriver)
 
         return DriverMapper.toResponse(existingDriver)
     }
@@ -81,6 +101,20 @@ class DriverService(
         )
         return driverRepository.save(driver)
             .let { DriverMapper.toResponse(it) }
+    }
+
+    fun getById(driverId: String): DriverResponse {
+        val driver: Drivers =
+            driverRepository.findById(driverId) ?: throw IllegalArgumentException("Driver not found with id: $driverId")
+        return driver
+            .let { DriverMapper.toResponse(it) }
+    }
+
+    fun cancelRide(event: RideCancelEvent) {
+        val driver = driverRepository.findById(event.driverId) ?: return
+        driver.rideId = null
+        driver.available = true
+        driverRepository.save(driver)
     }
 
     private fun publishRideUpdate(driver: Drivers) {

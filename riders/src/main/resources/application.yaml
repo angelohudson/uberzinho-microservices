@@ -3,13 +3,13 @@ spring:
     name: riders
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: 192.168.1.49:9092
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: rider-service
       auto-offset-reset: latest
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: 192.168.1.49:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
@@ -19,13 +19,17 @@ spring:
     topics:
       ride-requested: ride.requested
       ride-update: ride.update
+      cancel-ride: ride.cancel
   cloud:
     aws:
       region:
         static: us-east-2
+      credentials:
+        access-key: 
+        secret-key: 
   graphql:
     cors:
-      allowed-origins: "http://localhost:5173"
+      allowed-origins: "*"
       allowed-methods: POST, GET, OPTIONS, PUT, DELETE
       allowed-headers: "*"
 
@@ -33,5 +37,5 @@ server:
   port: 8081
 
 appsync:
-  api-key: da2-xom6c66scrct5hto2si5a6cqpi
-  url: https://rwohmolr2jb4jp2pkbqks2jvvu.appsync-api.us-east-2.amazonaws.com/graphql
+  api-key: 
+  url: 

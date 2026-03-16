@@ -5,12 +5,30 @@ type Mutation {
 
 type Query {
     findAvailableInArea(location: LocationInput!): [Driver]
+    getDriverById(driverId: ID!): Driver
 }
 
 type Driver {
     driverId: ID
+    name: String
     location: Location
     available: Boolean
+    associatedRide: Ride
+}
+
+type Ride {
+    rideId: ID
+    status: RideStatus
+}
+
+enum RideStatus {
+    REQUESTED,
+    SEARCHING,
+    DRIVER_ASSIGNED,
+    ARRIVING,
+    IN_PROGRESS,
+    COMPLETED,
+    CANCELLED,
 }
 
 type Location {

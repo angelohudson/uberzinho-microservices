@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class RideRequestConsumer(
-    private val driverMatchingService: DriverService,
+    private val driverService: DriverService,
     private val objectMapper: ObjectMapper = ObjectMapper()
 ) {
     @KafkaListener(
@@ -17,6 +17,6 @@ class RideRequestConsumer(
     )
     fun consume(event: String) {
         val rideRequestedEvent = objectMapper.readValue(event, RideRequestedEvent::class.java)
-        driverMatchingService.findClosestDriver(rideRequestedEvent)
+        driverService.findClosestDriver(rideRequestedEvent)
     }
 }

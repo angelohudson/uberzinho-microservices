@@ -1,9 +1,11 @@
 type Mutation {
     requestRide(input: RideRequestInput!): RideResponse
+    cancelRide(rideId: ID!): RideResponse
 }
 
 type Query {
     getRideById(rideId: ID!): RideResponse
+    getActiveRideByRider(riderId: ID!): RideResponse
 }
 
 input RideRequestInput {

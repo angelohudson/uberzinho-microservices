@@ -36,4 +36,11 @@ class DriverController(
     ): List<DriverResponse> {
         return driverService.findAvailableInArea(location.lat, location.lng)
     }
+
+    @QueryMapping
+    fun getDriverById(
+        @Argument driverId: String
+    ): DriverResponse {
+        return driverService.getById(driverId)
+    }
 }

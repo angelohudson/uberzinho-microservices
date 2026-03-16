@@ -1,5 +1,6 @@
 package com.uberzinho.drivers.config
 
+import com.uberzinho.drivers.interceptor.GlobalConsumerInterceptor
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer
@@ -20,13 +21,15 @@ class KafkaConfig(
     @ConditionalOnMissingBean(name = ["kafkaListenerContainerFactory"])
     fun kafkaListenerContainerFactory(
         configure: ConcurrentKafkaListenerContainerFactoryConfigurer,
-        consumerFactory: ObjectProvider<ConsumerFactory<Any, Any>>
+        consumerFactory: ObjectProvider<ConsumerFactory<Any, Any>>,
+        globalInterceptor: GlobalConsumerInterceptor
     ): ConcurrentKafkaListenerContainerFactory<Any, Any> {
         val factory = ConcurrentKafkaListenerContainerFactory<Any, Any>()
         configure.configure(
             factory,
             consumerFactory.getIfAvailable { DefaultKafkaConsumerFactory(this.properties.buildConsumerProperties()) })
         factory.setConcurrency(3)
+        factory.setRecordInterceptor(globalInterceptor)
         return factory
     }
 }

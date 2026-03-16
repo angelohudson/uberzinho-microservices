@@ -10,10 +10,6 @@
         <module name="riders" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="drivers" target="19" />
-      <module name="riders" target="19" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

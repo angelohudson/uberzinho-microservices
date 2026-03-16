@@ -14,11 +14,19 @@ class RideController(
 ) {
     @MutationMapping
     fun requestRide(@Argument input: RideRequestInput): RideResponse {
-        return rideService.requestRide(
-            riderId = input.riderId,
-            pickup = input.pickup,
-            dropoff = input.dropoff
-        )
+        return rideService.requestRide(input)
+    }
+
+    @MutationMapping
+    fun cancelRide(@Argument rideId: String): RideResponse {
+        return rideService.cancelRide(rideId)
+    }
+
+    @QueryMapping
+    fun getActiveRideByRider(
+        @Argument riderId: String
+    ): RideResponse? {
+        return rideService.getActiveRideByRider(riderId)
     }
 
     @QueryMapping
